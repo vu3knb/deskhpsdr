@@ -699,6 +699,7 @@ src/iambic.c \
 src/led.c \
 src/main.c \
 src/message.c \
+src/clock.c \
 src/meter.c \
 src/meter_menu.c \
 src/mode.c \

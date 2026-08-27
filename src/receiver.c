@@ -35,13 +35,13 @@
 #include "filter.h"
 #include "main.h"
 #include "meter.h"
+#include "clock.h"
 #include "mode.h"
 #include "property.h"
 #include "radio.h"
 #include "receiver.h"
 #include "transmitter.h"
 #include "vfo.h"
-#include "meter.h"
 #include "rx_panadapter.h"
 #include "zoompan.h"
 #include "sliders.h"
@@ -690,6 +690,7 @@ static int rx_update_display(gpointer data) {
         }
         rx->meter = level;
         meter_update(rx, SMETER, rx->meter, 0.0, 0.0);
+        clock_update();
       }
       if (display_debug) {
         rx_display_debug_update(rx, g_get_monotonic_time() - debug_start_us, rc);
