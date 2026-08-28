@@ -33,13 +33,13 @@
 #include "main.h"
 #include "receiver.h"
 #include "meter.h"
-#include "clock.h"
 #include "filter.h"
 #include "mode.h"
 #include "property.h"
 #include "radio.h"
 #include "vfo.h"
 #include "vox.h"
+#include "meter.h"
 #include "toolbar.h"
 #include "tx_off.h"
 #include "tx_panadapter.h"
@@ -843,7 +843,6 @@ static gboolean tx_update_display(gpointer data) {
     }
     if (!duplex) {
       meter_update(active_receiver, POWER, tx->fwd, tx->alc, tx->swr);
-      clock_update();
     }
     if (display_debug) {
       tx_display_debug_update(tx, g_get_monotonic_time() - debug_start_us, rc);
