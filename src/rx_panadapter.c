@@ -789,15 +789,14 @@ static void get_local_time(char *zeitString, size_t groesse) {
            Zeit.tm_sec);
 }
 
-static void get_ist_time(char *istString, size_t groesse) {
-  // IST is UTC+5:30 (5 hours 30 minutes)
+static void get_system_timezone_time(char *tzString, size_t groesse) {
+  // Get local time based on system timezone settings
+  // localtime_r respects the system's TZ environment variable
   time_t aktuelleZeit;
   time(&aktuelleZeit);
-  // Add 5.5 hours (19800 seconds) to get IST
-  aktuelleZeit += 19800;
   struct tm Zeit;
-  gmtime_r(&aktuelleZeit, &Zeit);
-  snprintf(istString, groesse, "%02d:%02d:%02d",
+  localtime_r(&aktuelleZeit, &Zeit);
+  snprintf(tzString, groesse, "%02d:%02d:%02d",
            Zeit.tm_hour,
            Zeit.tm_min,
            Zeit.tm_sec);
@@ -2580,8 +2579,8 @@ void display_panadapter_messages(cairo_t *cr, int width, unsigned int fps) {
       snprintf(_text, sizeof(_text), "%s UTC", zeitString);
       cairo_show_text(cr, _text);
       cairo_move_to(cr, width - 110.0, 45.0);
-      get_ist_time(istString, sizeof(istString));
-      snprintf(_text, sizeof(_text), "%s IST", istString);
+      get_system_timezone_time(istString, sizeof(istString));
+      snprintf(_text, sizeof(_text), "%s LOC", istString);
       cairo_show_text(cr, _text);
     }
   }
