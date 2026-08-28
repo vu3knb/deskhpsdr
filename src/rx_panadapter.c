@@ -56,6 +56,7 @@
 #include "map_d.h"
 
 char zeitString[20];
+char istString[20];
 int val_agcsetpoint = 0;
 int val_hwagc = 0;
 int val_rfgr = 0;
@@ -783,6 +784,20 @@ static void get_local_time(char *zeitString, size_t groesse) {
   gmtime_r(&aktuelleZeit, &Zeit);  // thread-sicher
   // Formatierter Zeit-String erstellen
   snprintf(zeitString, groesse, "%02d:%02d:%02d",
+           Zeit.tm_hour,
+           Zeit.tm_min,
+           Zeit.tm_sec);
+}
+
+static void get_ist_time(char *istString, size_t groesse) {
+  // IST is UTC+5:30 (5 hours 30 minutes)
+  time_t aktuelleZeit;
+  time(&aktuelleZeit);
+  // Add 5.5 hours (19800 seconds) to get IST
+  aktuelleZeit += 19800;
+  struct tm Zeit;
+  gmtime_r(&aktuelleZeit, &Zeit);
+  snprintf(istString, groesse, "%02d:%02d:%02d",
            Zeit.tm_hour,
            Zeit.tm_min,
            Zeit.tm_sec);
@@ -2563,6 +2578,10 @@ void display_panadapter_messages(cairo_t *cr, int width, unsigned int fps) {
       cairo_move_to(cr, width - 120.0, 30.0);
       get_local_time(zeitString, sizeof(zeitString));
       snprintf(_text, sizeof(_text), "%s UTC", zeitString);
+      cairo_show_text(cr, _text);
+      cairo_move_to(cr, width - 110.0, 45.0);
+      get_ist_time(istString, sizeof(istString));
+      snprintf(_text, sizeof(_text), "%s IST", istString);
       cairo_show_text(cr, _text);
     }
   }
